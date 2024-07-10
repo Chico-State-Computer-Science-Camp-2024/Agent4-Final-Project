@@ -1,12 +1,4 @@
-.flex-container{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-content: flex-end;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: 5px;
-}
+
 header{
     /*background-color: rgb(113, 143, 106);*/
     padding: 0px;
@@ -18,18 +10,19 @@ header{
 aside{
     float: right;
     background-image: linear-gradient(0deg, #ecbd50 0%, #8b68c7 80%, #3c0762 100%);
-    width: 25%;
+    width: 305px;
     height: 545px;
     text-align: center;
     margin: 5px;
     border-radius: 25px;
     border: 4px,solid, white;
+
 }
 
 section{
     float:left;
     background-color:rgb(9, 13, 9);
-    width:72%;
+    width:880px;
     height: 550px;
     margin: 5px
 }
@@ -46,10 +39,4 @@ body{
     background-image: linear-gradient(0deg, #330774 0%, #8b68c7 35%, #e9df71 100%);
     margin-left: 10%;
     margin-right: 10%;
-}
-
-#interactive-game{
-    width:100%;
-    height:100%;
-    background-color: white;
 }

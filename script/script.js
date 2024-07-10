@@ -1,56 +1,137 @@
-var canvas = document.querySelector("canvas");
-var ctx = canvas.getContext("2d");
-var player;
-let pressedKeyX = "none";
-let pressedKeyY = "none";
-let gameOver = false;
+const canvas = document.getElementById("interactive-game");
+const ctx = canvas.getContext("2d");
 
-class Player{
-    constructor(){
-        this.x = 240;
-        this.y = 240;
-        this.width = 20;
-        this.height = 20;
-        this.lives = 3;
+let x = 100; //start location on x-axis
+let y = 100; //start location of y-axis
+let radius = 50;
+let speed = 0.3; //speed of player
+let playerImage = new Image;
+playerImage.src = "images/idleanimation.gif"
 
-        this.playerImage = new Image();
-        this.playerImage.src = "images/idleanimation.gif";
+let upPressed = false;
+let downPressed = false;
+let leftPressed = false;
+let rightPressed = false;
 
-        this.playerImage.onload = () => {
-            this.imageLoaded = true; // Flag to track image loading status
-        };
+let playerWidth = 100
+let playerHeight = 100
 
-
-        this.update = function() {
-            if (this.lives <=0){
-                gameOver = true;
-            }
-        }
-        this.draw = function(){
-            if (this.imageLoaded){
-                ctx.drawImage(this.playerImage, this.x, this.y, this.width, this.height);
-            } else {
-                console.warn('Player image is not yet loaded.');
-            }
-            
-
-        }
-    }
+playerImage.onload = function(){
+  drawGame();
 }
 
-player = new Player;
-
-function runPlayer(){
-    player.update();
-    player.draw();
+function drawGame() {
+  requestAnimationFrame(drawGame);
+  clearScreen();
+  inputs();
+  boundryCheck();
+  drawPlayer();
 }
 
-function runGame(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    runPlayer();
-    if (!gameOver){
-        requestAnimationFrame(runGame);
-
-    }
+function clearScreen() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
-requestAnimationFrame(runGame);
+
+function boundryCheck() {
+  //up
+  if (y < 0) {
+    y = 0;
+  }
+  //down
+  if (y > canvas.height - playerHeight) {
+    y = canvas.height - playerHeight;
+  }
+  //left
+  if (x < 0) {
+    x = 0;
+  }
+  //right
+  if (x > canvas.width - playerWidth) {
+    x = canvas.width - playerWidth;
+  }
+}
+
+function inputs() {
+  if (upPressed) {
+    y = y - speed;
+  }
+  if (downPressed) {
+    y = y + speed;
+  }
+  if (leftPressed) {
+    x = x - speed;
+  }
+  if (rightPressed) {
+    x = x + speed;
+  }
+}
+
+function drawPlayer() {
+  ctx.drawImage(playerImage, x, y, playerWidth, playerHeight);
+  //if (upPressed) {
+  //  ctx.fillStyle = "red";
+  //}
+  //if (downPressed) {
+  //  ctx.fillStyle = "blue";
+  //}
+  //if (leftPressed) {
+  //  ctx.fillStyle = "yellow";
+  //}
+  //if (rightPressed) {
+  //  ctx.fillStyle = "purple";
+  //}
+
+  //ctx.beginPath();
+  //ctx.arc(x, y, radius, 0, Math.PI * 2);
+  //ctx.fill();
+}
+
+
+
+document.body.addEventListener("keydown", keyDown);
+document.body.addEventListener("keyup", keyUp);
+
+function keyDown(event) {
+  //up
+  if (event.keyCode == 38) {
+    upPressed = true;
+  }
+
+  //down
+  if (event.keyCode == 40) {
+    downPressed = true;
+  }
+  //left
+  if (event.keyCode == 37) {
+    leftPressed = true;
+  }
+
+  //right
+  if (event.keyCode == 39) {
+    rightPressed = true;
+  }
+}
+
+function keyUp(event) {
+  //up
+  if (event.keyCode == 38) {
+    upPressed = false;
+  }
+
+  //down
+  if (event.keyCode == 40) {
+    downPressed = false;
+  }
+  //left
+  if (event.keyCode == 37) {
+    leftPressed = false;
+  }
+
+  //right
+  if (event.keyCode == 39) {
+    rightPressed = false;
+  }
+}
+
+drawGame();
