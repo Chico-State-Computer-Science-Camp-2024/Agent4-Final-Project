@@ -1,31 +1,54 @@
 const canvas = document.getElementById("interactive-game");
 const ctx = canvas.getContext("2d");
 
-let x = 100; //start location on x-axis
-let y = 100; //start location of y-axis
-let radius = 50;
-let speed = 0.3; //speed of player
-let playerImage = new Image;
-playerImage.src = "images/idleanimation.gif"
+let x = 100; // Start location on x-axis
+let y = 100; // Start location on y-axis
+let speed = 0.5; // Speed of player
+let playerImage = new Image();
+playerImage.src = "images/idleanimation.gif"; // Ensure this path is correct
 
 let upPressed = false;
 let downPressed = false;
 let leftPressed = false;
 let rightPressed = false;
 
-let playerWidth = 100
-let playerHeight = 100
+let playerWidth = 100; // Desired width of the player image
+let playerHeight = 100; // Desired height of the player image
 
-playerImage.onload = function(){
-  drawGame();
+let bullets = []; // Array to hold bullets
+let bulletInterval = 0; // Interval to control bullet creation
+
+let gameOver = false;
+
+
+let player = {
+  x: x,
+  y: y,
+  height: playerHeight,
+  width: playerWidth,
+  lives: 3,
+  update: function() {
+    if (this.lives <=0) {
+      gameOver = true
+    }
+  }
+
 }
+
+playerImage.onload = function() {
+  drawGame();
+};
+
+
+
 
 function drawGame() {
   requestAnimationFrame(drawGame);
   clearScreen();
   inputs();
-  boundryCheck();
+  boundaryCheck();
   drawPlayer();
+  runBullets(); // Run bullets within the draw loop
 }
 
 function clearScreen() {
@@ -33,105 +56,155 @@ function clearScreen() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-function boundryCheck() {
-  //up
-  if (y < 0) {
-    y = 0;
+function boundaryCheck() {
+  // Up
+  if (player.y < 0) {
+    player.y = 0;
   }
-  //down
-  if (y > canvas.height - playerHeight) {
-    y = canvas.height - playerHeight;
+  // Down
+  if (player.y > canvas.height - playerHeight) {
+    player.y = canvas.height - playerHeight;
   }
-  //left
-  if (x < 0) {
-    x = 0;
+  // Left
+  if (player.x < 0) {
+    player.x = 0;
   }
-  //right
-  if (x > canvas.width - playerWidth) {
-    x = canvas.width - playerWidth;
+  // Right
+  if (player.x > canvas.width - playerWidth) {
+    player.x = canvas.width - playerWidth;
   }
 }
 
 function inputs() {
   if (upPressed) {
-    y = y - speed;
+    player.y -= speed;
   }
   if (downPressed) {
-    y = y + speed;
+    player.y += speed;
   }
   if (leftPressed) {
-    x = x - speed;
+    player.x -= speed;
   }
   if (rightPressed) {
-    x = x + speed;
+    player.x += speed;
   }
 }
 
 function drawPlayer() {
-  ctx.drawImage(playerImage, x, y, playerWidth, playerHeight);
-  //if (upPressed) {
-  //  ctx.fillStyle = "red";
-  //}
-  //if (downPressed) {
-  //  ctx.fillStyle = "blue";
-  //}
-  //if (leftPressed) {
-  //  ctx.fillStyle = "yellow";
-  //}
-  //if (rightPressed) {
-  //  ctx.fillStyle = "purple";
-  //}
-
-  //ctx.beginPath();
-  //ctx.arc(x, y, radius, 0, Math.PI * 2);
-  //ctx.fill();
+  // Draw the animated GIF at the specified position and size
+  ctx.drawImage(playerImage, player.x, player.y, playerWidth, playerHeight);
 }
-
-
 
 document.body.addEventListener("keydown", keyDown);
 document.body.addEventListener("keyup", keyUp);
 
 function keyDown(event) {
-  //up
-  if (event.key == 'w') {
+  // W (Up)
+  if (event.key === 'w') {
     upPressed = true;
   }
 
-  //down
-  if (event.key == 's') {
+  // S (Down)
+  if (event.key === 's') {
     downPressed = true;
   }
-  //left
-  if (event.key == 'a') {
+  // A (Left)
+  if (event.key === 'a') {
     leftPressed = true;
   }
 
-  //right
-  if (event.key == 'd') {
+  // D (Right)
+  if (event.key === 'd') {
     rightPressed = true;
   }
 }
 
 function keyUp(event) {
-  //up
-  if (event.key == 'w') {
+  // W (Up)
+  if (event.key === 'w') {
     upPressed = false;
   }
 
-  //down
-  if (event.key == 's') {
+  // S (Down)
+  if (event.key === 's') {
     downPressed = false;
   }
-  //left
-  if (event.key == 'a') {
+  // A (Left)
+  if (event.key === 'a') {
     leftPressed = false;
   }
 
-  //right
-  if (event.key == 'd') {
+  // D (Right)
+  if (event.key === 'd') {
     rightPressed = false;
   }
 }
 
-drawGame();
+// Bullets
+class Bullet {
+  constructor(x, y, speedX, speedY) {
+    this.x = x;
+    this.y = y;
+    this.width = 10;
+    this.height = 10;
+    this.speedX = speedX;
+    this.speedY = speedY;
+  }
+
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+  }
+
+  draw() {
+    ctx.fillStyle = "red";
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+  }
+}
+
+function runBullets() {
+  bulletInterval++;
+  if (bulletInterval % 50 === 0) {
+    let y1 = Math.floor(Math.random() * (canvas.height - 0)) + 0;
+    let y2 = Math.floor(Math.random() * (canvas.height - 0)) + 0;
+    let x1 = Math.floor(Math.random() * (canvas.width - 0)) + 0;
+    let x2 = Math.floor(Math.random() * (canvas.width - 0)) + 0;
+    bullets.push(new Bullet(-10, y1, 2, 0));
+    bullets.push(new Bullet(canvas.width, y2, -2, 0));
+    bullets.push(new Bullet(x1, -10, 0, 2));
+    bullets.push(new Bullet(x2, canvas.height, 0, -2));
+  }
+
+  for (let i = 0; i < bullets.length; i++) {
+    bullets[i].update();
+    bullets[i].draw();
+    if (bullets[i] &&
+        bullets[i].x < -11 || bullets[i].x > 880 ||
+        bullets[i].y < -11 || bullets[i].y > 550) {
+        bullets.splice(i, 1);
+    }
+    if (collision(player, bullets[i])) {
+        player.lives--;
+        bullets.splice(i, 1);
+        i--;
+
+        if (player.lives <=0){
+          gameOver = true;
+        }
+      }
+    }
+}
+
+// Collision
+function collision(first, second) {
+  if (first.x < second.x + second.width &&
+      first.x + first.width > second.x &&
+      first.y < second.y + second.height &&
+      first.y + first.height > second.y) {
+      return true;
+      }
+}
+
+
+// Run the game loop
+requestAnimationFrame(drawGame);
