@@ -3,7 +3,7 @@ const ctx = canvas.getContext("2d");
 
 let x = 100; // Start location on x-axis
 let y = 100; // Start location on y-axis
-let speed = 0.5; // Speed of player
+let speed = 0.7; // Speed of player
 let playerImage = new Image();
 playerImage.src = "images/idleanimation.gif"; // Ensure this path is correct
 
@@ -171,15 +171,15 @@ class Bullet {
 
 function runBullets() {
   bulletInterval++;
-  if (bulletInterval % 50 === 0) {
+  if (bulletInterval % 375 === 0) { //Changes amount of bullets that appears (higher number = less bullets)
     let y1 = Math.floor(Math.random() * (canvas.height - 0)) + 0;
     let y2 = Math.floor(Math.random() * (canvas.height - 0)) + 0;
     let x1 = Math.floor(Math.random() * (canvas.width - 0)) + 0;
     let x2 = Math.floor(Math.random() * (canvas.width - 0)) + 0;
-    bullets.push(new Bullet(-10, y1, 2, 0));
-    bullets.push(new Bullet(canvas.width, y2, -2, 0));
-    bullets.push(new Bullet(x1, -10, 0, 2));
-    bullets.push(new Bullet(x2, canvas.height, 0, -2));
+    bullets.push(new Bullet(-10, y1, 0.5, 0));
+    bullets.push(new Bullet(canvas.width, y2, -0.5, 0));
+    bullets.push(new Bullet(x1, -10, 0, 0.5));
+    bullets.push(new Bullet(x2, canvas.height, 0, -0.5));
   }
 
   for (let i = 0; i < bullets.length; i++) {
