@@ -4,16 +4,28 @@ const ctx = canvas.getContext("2d");
 let x = 100; // Start location on x-axis
 let y = 100; // Start location on y-axis
 let speed = 0.7; // Speed of player
-let playerImage = new Image();
-playerImage.src = "images/idleanimation.gif"; // Ensure this path is correct
+let spriteSheet = new Image();
+spriteSheet.src = "images/lilmansprite.png"; // Ensure this path is correct
 
+//Movement key variables
 let upPressed = false;
 let downPressed = false;
 let leftPressed = false;
 let rightPressed = false;
 
+//player info variables
 let playerWidth = 100; // Desired width of the player image
 let playerHeight = 100; // Desired height of the player image
+
+//frames info for spritesheet
+let frameIndex = 0;
+let frameCount = 3; // Number of frames in the sprite sheet
+let frameSpeed = 100; // 
+let frameInterval = 0;
+
+let frameWidth = 250;  // Example width of each frame
+let frameHeight = 380; // Example height of each frame
+let currentFrame = 0; // Example: initialize current frame index
 
 let bullets = []; // Array to hold bullets
 let bulletInterval = 0; // Interval to control bullet creation
@@ -21,12 +33,12 @@ let bulletInterval = 0; // Interval to control bullet creation
 let gameOver = false;
 
 
-let player = {
+let player = { //identify player info
   x: x,
   y: y,
   height: playerHeight,
   width: playerWidth,
-  lives: 3,
+  lives: 3, //defines how many lives the player has before game over
   update: function() {
     if (this.lives <=0) {
       gameOver = true
@@ -35,7 +47,7 @@ let player = {
 
 }
 
-playerImage.onload = function() {
+spriteSheet.onload = function() { //loads player image when loading game
   drawGame();
 };
 
@@ -43,7 +55,7 @@ playerImage.onload = function() {
 
 
 function drawGame() {
-  if (!gameOver) {
+  if (!gameOver) { 
       requestAnimationFrame(drawGame);
   } else {
       ctx.fillStyle = "red";
@@ -63,7 +75,7 @@ function clearScreen() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-function boundaryCheck() {
+function boundaryCheck() { //makes sure player does not "leave" the canvas
   // Up
   if (player.y < 0) {
     player.y = 0;
@@ -98,9 +110,30 @@ function inputs() {
 }
 
 function drawPlayer() {
-  // Draw the animated GIF at the specified position and size
-  ctx.drawImage(playerImage, player.x, player.y, playerWidth, playerHeight);
+  // Clear the previous frame if needed
+  ctx.clearRect(player.x, player.y, playerWidth, playerHeight);
+
+  // Draw the current frame of the sprite sheet
+  ctx.drawImage(
+    spriteSheet,            // Image object containing the sprite sheet
+    currentFrame * frameWidth, // X coordinate of the frame in the sprite sheet
+    0,                       // Y coordinate of the frame in the sprite sheet (assuming it's at the top)
+    frameWidth,              // Width of the frame
+    frameHeight,             // Height of the frame
+    player.x,                // X coordinate on the canvas to draw
+    player.y,                // Y coordinate on the canvas to draw
+    playerWidth,             // Width to draw on the canvas
+    playerHeight             // Height to draw on the canvas
+  );
+
+  // Increment frame index for next draw call (to animate)
+  frameInterval++;
+  if (frameInterval >= frameSpeed) {
+    currentFrame = (currentFrame + 1) % frameCount;
+    frameInterval = 0; // Reset frame interval counter
+  }
 }
+
 
 document.body.addEventListener("keydown", keyDown);
 document.body.addEventListener("keyup", keyUp);
