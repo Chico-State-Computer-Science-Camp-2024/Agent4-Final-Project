@@ -8,7 +8,8 @@ header{
 }
 
 aside{
-    float: right;
+    position: absolute;
+    right: 10%;
     background-image: linear-gradient(0deg, #ecbd50 0%, #8b68c7 80%, #3c0762 100%);
     width: 305px;
     height: 545px;

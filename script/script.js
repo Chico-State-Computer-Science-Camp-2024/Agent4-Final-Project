@@ -43,13 +43,20 @@ playerImage.onload = function() {
 
 
 function drawGame() {
-  requestAnimationFrame(drawGame);
+  if (!gameOver) {
+      requestAnimationFrame(drawGame);
+  } else {
+      ctx.fillStyle = "red";
+      ctx.font = "30px Arial";
+      ctx.fillText("Game Over", canvas.width / 2 - 80, canvas.height / 2);
+  }
   clearScreen();
   inputs();
   boundaryCheck();
   drawPlayer();
   runBullets(); // Run bullets within the draw loop
 }
+
 
 function clearScreen() {
   ctx.fillStyle = "black";
@@ -206,5 +213,11 @@ function collision(first, second) {
 }
 
 
-// Run the game loop
-requestAnimationFrame(drawGame);
+function runGame() {
+  ctx.clearRect(0, 0, 880, 550);
+  drawPlayer();
+  if (!gameOver) {
+      requestAnimationFrame(runGame);
+  }
+}
+requestAnimationFrame(runGame);
