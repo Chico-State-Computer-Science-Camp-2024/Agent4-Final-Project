@@ -1,7 +1,7 @@
 const canvas = document.getElementById("interactive-game"); //"links to canavas using the id"
 const ctx = canvas.getContext("2d");
 
-let x = 350; // Start location on x-axis
+let x = 400; // Start location on x-axis
 let y = 200; // Start location on y-axis
 let speed = 0.85; // Speed of player
 
@@ -241,8 +241,8 @@ canvas.addEventListener("click", function(event) {
 
 function resetGame() {
   // Reset all game variables
-  player.x = 100;
-  player.y = 100;
+  player.x = 400;
+  player.y = 200;
   player.lives = 3;
   player.hits = 0;
   bullets = [];
@@ -279,9 +279,9 @@ class Bullet {
     this.speedX = speedX;
     this.speedY = speedY;
     this.frameSpeed = 50; //higher = slower
-    this.frameCount = 7;
-    this.frameIndex = 0;
-    this.frameInterval = 0;
+    this.frameCount = 7; //number of frames in cycle
+    this.frameIndex = 0; //track current frame in cycle
+    this.frameInterval = 0; //
   }
 
   update() {
