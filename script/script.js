@@ -240,13 +240,15 @@ function resetGame() {
   // Reset all game variables
   player.x = 100;
   player.y = 100;
-  player.lives = 5;
+  player.lives = 3;
   player.hits = 0;
   bullets = [];
   bulletInterval = 0;
   gameOver = false;
   startTime = 0;
   elapsedTime = 0;
+  frameSpeed = 50;
+  frameInterval = 0;
 
 
   // Restart the game loop
