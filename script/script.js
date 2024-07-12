@@ -1,8 +1,8 @@
 const canvas = document.getElementById("interactive-game"); //"links to canavas using the id"
 const ctx = canvas.getContext("2d");
 
-let x = 100; // Start location on x-axis
-let y = 100; // Start location on y-axis
+let x = 350; // Start location on x-axis
+let y = 200; // Start location on y-axis
 let speed = 0.85; // Speed of player
 
 //Load different sprites
@@ -10,12 +10,16 @@ let spriteIdle = new Image();
 spriteIdle.src = "images/spriteidle.png"
 let spriteRun = new Image();
 spriteRun.src = "images/spriterun.png"
+let spriteEye = new Image
+spriteEye.src = "images/spriteEye.png"
 
-//starting sprite
+//starting sprite for player
 let currentSprite = spriteIdle;
-let startTime = 0;
-let elapsedTime = 0;
-let highScore = 0;
+
+//variables for highscore
+let startTime = 0; //timestamp for when player starts moving
+let elapsedTime = 0; //in miliseconds
+let highScore = 0; //variable to store highscore
 
 //Movement key variables
 let upPressed = false;
@@ -37,6 +41,8 @@ let frameWidth = 275;  // Example width of each frame
 let frameHeight = 380; // Example height of each frame
 let currentFrame = 0; // Example: initialize current frame index
 
+
+//bullet(future enemies) info
 let bullets = []; // Array to hold bullets
 let bulletInterval = 0; // Interval to control bullet creation
 
@@ -64,9 +70,6 @@ let player = { //identify player info
 spriteIdle.onload = function() { //loads player image when loading game
   drawGame();
 };
-
-
-
 
 function drawGame() {
   if (!gameOver) { 
@@ -269,23 +272,42 @@ class Bullet {
   constructor(x, y, speedX, speedY) {
     this.x = x;
     this.y = y;
-    this.width = 10;
-    this.height = 10;
+    this.width = 50; // Set enemy width
+    this.height = 66; // Set enemy height
+    this.frameWidth = 355;
+    this.frameHeight = 522;
     this.speedX = speedX;
     this.speedY = speedY;
+    this.frameSpeed = 50; //higher = slower
+    this.frameCount = 7;
+    this.frameIndex = 0;
+    this.frameInterval = 0;
   }
 
   update() {
     this.x += this.speedX;
     this.y += this.speedY;
+    this.frameInterval++;
+    if (this.frameInterval >= this.frameSpeed) {
+      this.frameIndex = (this.frameIndex + 1) % this.frameCount;
+      this.frameInterval = 0;
+    }
   }
 
   draw() {
-    ctx.fillStyle = "red";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.drawImage(
+      spriteEye,
+      this.frameIndex * this.frameWidth,
+      0,
+      this.frameWidth,
+      this.frameHeight,
+      this.x,
+      this.y,
+      this.width,
+      this.height
+    );
   }
 }
-
 function runBullets() {
   if (startTime > 0) {
     bulletInterval++;

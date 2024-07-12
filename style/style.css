@@ -34,7 +34,7 @@ footer{
     width:72%;
     margin: 5px;
     line-height: 50px;
-    color:#e9df71
+    color:#e9df71;
 }
 body{
     background-image: linear-gradient(0deg, #330774 0%, #8b68c7 35%, #e9df71 100%);
